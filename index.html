@@ -34,6 +34,7 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--latin);
   display:flex;flex-direction:column;gap:14px}
 
 ruby{ruby-position:over}
+.rmj{font-family:var(--latin);font-weight:600;font-size:.85em;margin-right:.2em}
 rt{font-family:var(--latin);font-size:.42em;font-weight:500;color:var(--muted);letter-spacing:.02em}
 .no-romaji rt{visibility:hidden}
 .jp{font-family:var(--jp);font-weight:700}
@@ -83,8 +84,7 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .w-en .t{font-weight:600;font-size:clamp(12px,2.4vw,15px)}
 .chip{display:inline-block;font:600 10px var(--latin);letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:99px;margin-top:4px}
 .chip.my{background:var(--persimmon-soft);color:var(--persimmon)}
-.chip.pol{background:var(--teal-soft);color:var(--teal)}
-.stack{display:flex;flex-direction:column;align-items:center}
+.chip.pol{background:var(--teal-soft);color:var(--teal)}.stack{display:flex;flex-direction:column;align-items:center}
 
 /* Memory */
 .mem{display:grid;grid-template-columns:repeat(var(--cols,5),minmax(0,1fr));gap:8px}
@@ -157,8 +157,7 @@ td.em{font-size:22px;width:40px}
 <div class="wrap" id="app">
   <nav class="topics" aria-label="Topic">
     <button class="topic" id="topic-counting" data-topic="counting" aria-pressed="true"><span class="mini">人</span>Counting people</button>
-    <button class="topic" id="topic-family" data-topic="family" aria-pressed="false"><span class="mini">家</span>Family</button>
-  </nav>
+    <button class="topic" id="topic-family" data-topic="family" aria-pressed="false"><span class="mini">家</span>Family</button>  </nav>
 
   <header>
     <div class="brand">
@@ -286,13 +285,14 @@ const F=[
   {id:'otoutosan', jp:'おとうとさん', r:'otoutosan', en:'younger brother', em:'👦', set:'pol'},
   {id:'imoutosan', jp:'いもうとさん', r:'imoutosan', en:'younger sister',  em:'👧', set:'pol'},
 
-  {id:'suteppu', jp:'ステップ', r:'suteppu', en:'step (step-family)', em:'🔗', set:'opt'},
+  {id:'suteppu', jp:'', r:'suteppu', romajiOnly:true, en:'step (step-family)', em:'🔗', set:'opt'},
   {id:'itoko',   jp:'いとこ',   r:'itoko',   en:'cousin',             em:'🧑‍🤝‍🧑', set:'opt'},
   {id:'futago',  jp:'ふたご',   r:'futago',  en:'twins',              em:'👭', set:'opt'}
 ];
 const fById=id=>F.find(w=>w.id===id);
 const chip=w=>w.set==='my'?'<span class="chip my">my family</span>':w.set==='pol'?'<span class="chip pol">polite</span>':'';
-const jpFace=(w,tag)=>tag?`<span class="stack"><span class="w-jp">${rb(w.jp,w.r)}</span>${chip(w)}</span>`:`<span class="w-jp">${rb(w.jp,w.r)}</span>`;
+const word=w=>w.romajiOnly?`<span class="rmj">${w.r}</span>`:rb(w.jp,w.r);
+const jpFace=(w,tag)=>tag?`<span class="stack"><span class="w-jp">${word(w)}</span>${chip(w)}</span>`:`<span class="w-jp">${word(w)}</span>`;
 const enFace=w=>`<span class="w-en"><span class="em" aria-hidden="true">${w.em}</span><span class="t">${w.en}</span></span>`;
 const fPool=()=>{const v=val('wordSet');return v==='mix'?F.filter(w=>w.set!=='opt'):F.filter(w=>w.set===v)};
 
@@ -332,7 +332,7 @@ const family={
     <ul class="notes">
       <li><b>My family</b> words are humble. Use them when you talk about your own family to other people.</li>
       <li><b>Polite</b> words are for other people's family. You can also use them to call your own family members, like <span class="jp">${rb('お母さん','okaasan')}</span>!</li>
-      <li><span class="jp">${rb('ステップ','suteppu')}</span> is written in katakana because it comes from English "step".</li>
+      <li><b>suteppu</b> comes from the English word "step", as in step-family.</li>
     </ul>`;
   }
 };
