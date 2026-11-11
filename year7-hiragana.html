@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Year 7 Hiragana Reading</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Lexend:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one compact column sized for an LMS iframe; tab bar, shared controls, game stage */
+:root{
+  --paper:#F2F5FA; --card:#FFFFFF; --ink:#1B2246; --muted:#5A6386; --line:#D7DDEB;
+  --indigo:#2D47A0; --indigo-soft:#E4E9F8; --persimmon:#DE5F28; --teal:#1E8C8A;
+  --good:#257A4E; --goodbg:#DDF1E5; --bad:#C2303B; --badbg:#FBE3E5;
+  --jp:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;
+  --latin:"Lexend",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#111529; --card:#1B2140; --ink:#E8EBF7; --muted:#A2A9C9; --line:#2D3558;
+  --indigo:#8099F2; --indigo-soft:#252E58; --persimmon:#F38652; --teal:#4CC3BF;
+  --good:#6BCF96; --goodbg:#173A29; --bad:#F27C85; --badbg:#3E1D25; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#111529; --card:#1B2140; --ink:#E8EBF7; --muted:#A2A9C9; --line:#2D3558;
+  --indigo:#8099F2; --indigo-soft:#252E58; --persimmon:#F38652; --teal:#4CC3BF;
+  --good:#6BCF96; --goodbg:#173A29; --bad:#F27C85; --badbg:#3E1D25; color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--latin);font-size:15px;line-height:1.5}
+.wrap{max-width:820px;margin:0 auto;padding-block:16px 28px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:14px}
+
+ruby{ruby-position:over}
+rt{font-family:var(--latin);font-size:.42em;font-weight:500;color:var(--muted);letter-spacing:.02em}
+.no-romaji rt{visibility:hidden}
+.no-romaji .always rt{visibility:visible}
+.jp{font-family:var(--jp);font-weight:700}
+
+header{display:flex;align-items:center;gap:12px}
+.seal{width:48px;height:48px;border-radius:12px;background:var(--persimmon);color:#fff;display:grid;place-items:center;
+  font:900 30px/1 var(--jp);flex:none}
+h1{margin:0;font-size:22px;font-weight:700;letter-spacing:-.01em;text-wrap:balance}
+.sub{margin:0;color:var(--muted);font-size:13px}
+
+.tabs{display:flex;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:4px;flex-wrap:wrap}
+.tab{flex:1 1 auto;border:0;background:transparent;color:var(--muted);font:600 14px var(--latin);padding:9px 12px;border-radius:9px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--indigo);color:#fff}
+.tab:not([aria-selected="true"]):hover{background:var(--indigo-soft);color:var(--ink)}
+
+.controls{display:flex;gap:10px 14px;flex-wrap:wrap;align-items:center}
+.field{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
+select{font:500 14px var(--latin);color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 8px;max-width:100%}
+.toggle{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer}
+.toggle input{accent-color:var(--indigo);width:16px;height:16px}
+.btn{font:600 14px var(--latin);border:0;border-radius:9px;padding:8px 14px;cursor:pointer;background:var(--persimmon);color:#fff}
+.btn.ghost{background:var(--indigo-soft);color:var(--indigo)}
+.spacer{flex:1}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+
+.stage{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;min-height:340px}
+.status{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-bottom:12px;font-variant-numeric:tabular-nums}
+.status b{color:var(--ink)}
+
+.play{display:flex;flex-direction:column;align-items:center;gap:16px}
+.prompt{font-size:14px;color:var(--muted)}
+.big{min-width:min(320px,100%);padding:18px 24px;background:var(--paper);border-radius:14px;display:grid;place-items:center;text-align:center}
+.big .kana{font:700 clamp(40px,11vw,60px)/1.3 var(--jp)}
+.big .eng{display:flex;flex-direction:column;align-items:center;gap:4px}
+.big .eng .em{font-size:44px;line-height:1}
+.big .eng .t{font-weight:600;font-size:18px}
+.big .eng .rm{font:600 24px var(--latin);color:var(--indigo)}
+
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%;max-width:520px}
+.opt{border:2px solid var(--line);background:var(--paper);color:var(--ink);border-radius:12px;padding:12px 8px;cursor:pointer;font:600 20px var(--latin)}
+.opt:hover:not(:disabled){border-color:var(--indigo)}
+.opt.right{border-color:var(--good);background:var(--goodbg)}
+.opt.no{border-color:var(--bad);background:var(--badbg)}
+.opt:disabled{cursor:default}
+.fb{text-align:center;min-height:1.6em;font-size:15px}
+
+.answer{display:flex;gap:8px;width:100%;max-width:420px}
+.answer input{flex:1;min-width:0;font:600 22px var(--latin);color:var(--ink);background:var(--paper);border:2px solid var(--line);border-radius:12px;padding:8px 12px}
+.answer input.ok{border-color:var(--good);background:var(--goodbg)}
+.answer input.bad{border-color:var(--bad);background:var(--badbg)}
+.row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+.slot{width:100%;min-height:84px;border:2px dashed var(--line);border-radius:12px;padding:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center}
+.slot.ok{border-style:solid;border-color:var(--good);background:var(--goodbg)}
+.slot.bad{border-color:var(--bad);animation:shake .35s}
+.slot .ph{color:var(--muted);font-size:13px}
+.bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.chunk{border:2px solid var(--line);background:var(--paper);color:var(--ink);border-radius:10px;min-width:52px;padding:4px 10px;font:700 28px/1.4 var(--jp);cursor:pointer}
+.chunk:hover{border-color:var(--indigo)}
+.slot .chunk{background:var(--card);border-color:var(--indigo)}
+.chunk.used{visibility:hidden}
+
+.mem{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.mcard{aspect-ratio:5/4;border:0;padding:0;background:none;cursor:pointer;perspective:700px;max-width:100%;font:inherit;color:inherit}
+.mcard .in{position:relative;width:100%;height:100%;transition:transform .35s;transform-style:preserve-3d}
+.mcard.up .in,.mcard.done .in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;border-radius:12px;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:grid;place-items:center;padding:6px;overflow:hidden;text-align:center}
+.back{background:var(--indigo);color:rgba(255,255,255,.3);font:900 clamp(26px,6vw,44px) var(--jp)}
+.front{transform:rotateY(180deg);background:var(--paper);border:2px solid var(--line);color:var(--ink)}
+.mcard.done .front{border-color:var(--good);background:var(--goodbg)}
+.mcard.wrong .front{border-color:var(--bad)}
+.f-kana{font:700 clamp(17px,4.4vw,30px)/1.3 var(--jp);white-space:nowrap}
+.f-rm{font:600 clamp(14px,3.4vw,20px) var(--latin);color:var(--indigo)}
+.f-en{display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1.2}
+.f-en .em{font-size:clamp(20px,4.6vw,30px)}
+.f-en .t{font-weight:600;font-size:clamp(11px,2.4vw,14px)}
+
+.win{text-align:center;padding:14px;border-radius:12px;background:var(--goodbg);color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:14px}
+.win strong{font-size:18px}
+
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left;font-weight:600;padding:6px 8px;border-bottom:2px solid var(--line)}
+td{padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+td.k{font:700 24px var(--jp)}
+td.r{font-weight:600;color:var(--indigo)}
+td.em{font-size:22px;width:40px}
+h2{font-size:15px;margin:18px 0 6px}
+h2:first-child{margin-top:0}
+.notes{margin:14px 0 0;padding-left:18px;color:var(--muted);font-size:14px;display:flex;flex-direction:column;gap:4px}
+.notes b{color:var(--ink)}
+
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+@media (max-width:480px){
+  .mem{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .chunk{font-size:24px;min-width:46px}
+  .opt{font-size:18px}
+  h1{font-size:19px}
+}
+@media (prefers-reduced-motion:reduce){.mcard .in{transition:none}.slot.bad{animation:none}}
+</style>
+</head>
+<body class="no-romaji">
+<div class="wrap">
+  <header>
+    <div class="seal" aria-hidden="true">あ</div>
+    <div>
+      <h1>Year 7 Hiragana Reading</h1>
+      <p class="sub">Read the hiragana, then check yourself</p>
+    </div>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="tab-read" aria-selected="true" data-tab="read">Read it</button>
+    <button class="tab" role="tab" id="tab-type" aria-selected="false" data-tab="type">Type it</button>
+    <button class="tab" role="tab" id="tab-build" aria-selected="false" data-tab="build">Build it</button>
+    <button class="tab" role="tab" id="tab-memory" aria-selected="false" data-tab="memory">Memory</button>
+    <button class="tab" role="tab" id="tab-list" aria-selected="false" data-tab="list">Word list</button>
+  </div>
+
+  <div class="controls">
+    <label class="field" id="f-set">Words
+      <select id="wordSet">
+        <option value="a">Set 1: people & questions</option>
+        <option value="b">Set 2: my family</option>
+        <option value="all">All 19 words</option>
+      </select>
+    </label>
+    <label class="field" id="f-pair">Match
+      <select id="pairType">
+        <option value="rm">Hiragana ↔ Romaji</option>
+        <option value="en">Hiragana ↔ English</option>
+      </select>
+    </label>
+    <label class="toggle"><input type="checkbox" id="romaji"> Show romaji</label>
+    <span class="spacer"></span>
+    <button class="btn" id="newGame">New game</button>
+  </div>
+
+  <section class="stage" id="stage" aria-live="polite"></section>
+</div>
+
+<script>
+/* t = tiles in reading order, x = look-alike trap tiles, near = a common misreading, alt = accepted spellings when typing */
+const W=[
+  {h:'ふたご',     r:'futago',   en:'twins',             em:'👯', set:'a', t:['ふ','た','ご'], x:['こ','ぶ'], near:'futako'},
+  {h:'きょうだい', r:'kyoudai',  en:'siblings',          em:'👧👦', set:'a', t:['きょ','う','だ','い'], x:['き','よ'], near:'kiyoudai', alt:['kyodai','kyoodai']},
+  {h:'わたし',     r:'watashi',  en:'I / me',            em:'🙋', set:'a', t:['わ','た','し'], x:['れ','だ'], near:'wadashi'},
+  {h:'なんさい',   r:'nansai',   en:'how old?',          em:'🎂', set:'a', t:['な','ん','さ','い'], x:['め','ざ'], near:'nanzai'},
+  {h:'ぼく',       r:'boku',     en:'I / me (boys)',     em:'🙋‍♂️', set:'a', t:['ぼ','く'], x:['ほ','ぐ'], near:'hoku'},
+  {h:'おもしろい', r:'omoshiroi',en:'interesting / funny', em:'😂', set:'a', t:['お','も','し','ろ','い'], x:['る','あ'], near:'omoshirui'},
+  {h:'おにいさん', r:'oniisan',  en:'older brother',     em:'🧑', set:'a', t:['お','に','い','さ','ん'], x:['ね','ざ'], near:'onisan'},
+  {h:'おばあさん', r:'obaasan',  en:'grandmother',       em:'👵', set:'a', t:['お','ば','あ','さ','ん'], x:['は','お'], near:'obasan'},
+  {h:'だれ',       r:'dare',     en:'who?',              em:'❓', set:'a', t:['だ','れ'], x:['た','ろ'], near:'tare'},
+  {h:'かわいい',   r:'kawaii',   en:'cute',              em:'🐱', set:'a', t:['か','わ','い','い'], x:['れ','が'], near:'kawai'},
+  {h:'かぞく',     r:'kazoku',   en:'family',            em:'👨‍👩‍👧‍👦', set:'a', t:['か','ぞ','く'], x:['そ','ぐ'], near:'kasoku'},
+
+  {h:'いもうと',   r:'imouto',   en:'my younger sister', em:'👧', set:'b', t:['い','も','う','と'], x:['こ','し'], near:'imoudo', alt:['imoto','imooto']},
+  {h:'おとうと',   r:'otouto',   en:'my younger brother',em:'👦', set:'b', t:['お','と','う','と'], x:['あ','ど'], near:'otoudo', alt:['ototo','otooto']},
+  {h:'そふ',       r:'sofu',     en:'my grandfather',    em:'👴', set:'b', t:['そ','ふ'], x:['ぞ','う'], near:'zofu'},
+  {h:'いとこ',     r:'itoko',    en:'cousin',            em:'🧑‍🤝‍🧑', set:'b', t:['い','と','こ'], x:['ご','り'], near:'itogo'},
+  {h:'あに',       r:'ani',      en:'my older brother',  em:'👱‍♂️', set:'b', t:['あ','に'], x:['お','た'], near:'ari'},
+  {h:'あね',       r:'ane',      en:'my older sister',   em:'👩‍🦱', set:'b', t:['あ','ね'], x:['わ','れ'], near:'are'},
+  {h:'はは',       r:'haha',     en:'my mother',         em:'👩', set:'b', t:['は','は'], x:['ほ','ば'], near:'hoha'},
+  {h:'りょうしん', r:'ryoushin', en:'my parents',        em:'👫', set:'b', t:['りょ','う','し','ん'], x:['り','よ'], near:'riyoushin', alt:['ryoshin','ryooshin']}
+];
+
+const $=s=>document.querySelector(s);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const rb=(t,r)=>`<ruby>${t}<rt>${r}</rt></ruby>`;
+const kana=w=>`<span class="kana">${rb(w.h,w.r)}</span>`;
+const pool=()=>{const v=$('#wordSet').value;return v==='all'?W.slice():W.filter(w=>w.set===v)};
+const stage=$('#stage');
+let tab='read';
+
+/* Romaji for one tile, used for the optional hint above each tile */
+const TILE_RM={'ふ':'fu','た':'ta','ご':'go','こ':'ko','ぶ':'bu','きょ':'kyo','う':'u','だ':'da','い':'i','き':'ki','よ':'yo','わ':'wa','し':'shi','れ':'re',
+  'な':'na','ん':'n','さ':'sa','め':'me','ざ':'za','ぼ':'bo','く':'ku','ほ':'ho','ぐ':'gu','お':'o','も':'mo','ろ':'ro','る':'ru','あ':'a','に':'ni','ね':'ne',
+  'ば':'ba','は':'ha','か':'ka','が':'ga','ぞ':'zo','そ':'so','と':'to','ど':'do','り':'ri','りょ':'ryo'};
+
+const winBox=(head,msg)=>`<div class="win"><strong>${head}</strong><span>${msg}</span><button class="btn" data-again>Play again</button></div>`;
+const finish=(score,total)=>winBox(score>=Math.ceil(total*.8)?`<span class="jp">${rb('よくできました','yoku dekimashita')}！</span> ${score} / ${total}`:`${score} / ${total}`,
+  score>=Math.ceil(total*.8)?'Great reading!':'Keep practising. Look at the Word list, then play again.');
+stage.addEventListener('click',e=>{if(e.target.closest('[data-again]'))render()});
+
+/* ---------- Read it: hiragana → pick the romaji ---------- */
+function readIt(){
+  const qs=shuffle(pool()); let i=0, score=0;
+  function show(){
+    if(i===qs.length){stage.innerHTML=finish(score,qs.length);return}
+    const w=qs[i];
+    const others=shuffle(W.filter(o=>o!==w&&o.r!==w.near)).slice(0,2).map(o=>o.r);
+    const opts=shuffle([w.r,w.near,...others]);
+    stage.innerHTML=`<div class="status"><span>Word <b>${i+1}</b>/${qs.length}</span><span>Score <b>${score}</b></span></div>
+      <div class="play"><span class="prompt">How do you read this word?</span><div class="big">${kana(w)}</div>
+      <div class="opts" id="opts"></div><div class="fb" id="fb"></div></div>`;
+    opts.forEach((o,j)=>{
+      const b=document.createElement('button');b.className='opt';b.id='o'+j;b.textContent=o;
+      b.onclick=()=>{
+        const all=[...document.querySelectorAll('.opt')]; all.forEach(x=>x.disabled=true);
+        const ok=o===w.r; if(ok)score++;
+        b.classList.add(ok?'right':'no'); if(!ok) all.find(x=>x.textContent===w.r).classList.add('right');
+        $('#fb').innerHTML=`${w.em} <b>${w.r}</b> means "${w.en}"`;
+        setTimeout(()=>{i++;show()},ok?1300:2300);
+      };
+      $('#opts').appendChild(b);
+    });
+  }
+  show();
+}
+
+/* ---------- Type it: hiragana → type the romaji ---------- */
+const norm=s=>s.toLowerCase().trim().replace(/[\s\-']/g,'').replace(/ā/g,'aa').replace(/ī/g,'ii').replace(/ū/g,'uu').replace(/ē/g,'ee').replace(/ō/g,'ou');
+function typeIt(){
+  const qs=shuffle(pool()); let i=0, score=0;
+  function show(){
+    if(i===qs.length){stage.innerHTML=finish(score,qs.length);return}
+    const w=qs[i]; let tries=0, done=false;
+    stage.innerHTML=`<div class="status"><span>Word <b>${i+1}</b>/${qs.length}</span><span>Score <b>${score}</b></span></div>
+      <div class="play"><span class="prompt">Type this word in romaji.</span><div class="big">${kana(w)}</div>
+      <form class="answer" id="form" autocomplete="off"><input id="ans" aria-label="Your answer in romaji" placeholder="type here" autocapitalize="off" spellcheck="false"><button class="btn" id="go">Check</button></form>
+      <div class="row"><button class="btn ghost" id="hint" type="button">Hint</button></div>
+      <div class="fb" id="fb"></div></div>`;
+    const inp=$('#ans'); inp.focus();
+    $('#hint').onclick=()=>{$('#fb').innerHTML=`It starts with <b>${TILE_RM[w.t[0]]}</b>…`};
+    $('#form').onsubmit=e=>{
+      e.preventDefault();
+      if(done){i++;show();return}
+      const a=norm(inp.value); if(!a)return;
+      if(a===w.r||(w.alt||[]).includes(a)){
+        done=true; if(!tries)score++; inp.className='ok'; inp.readOnly=true;
+        $('#fb').innerHTML=`Correct! ${w.em} <b>${w.r}</b> means "${w.en}"`+(a!==w.r?`. We write it as <b>${w.r}</b>.`:'');
+        $('#go').textContent='Next';
+      }else{
+        tries++; inp.className='bad';
+        if(tries>=2){done=true; inp.readOnly=true; $('#fb').innerHTML=`The answer is <b>${w.r}</b> ${w.em} "${w.en}"`; $('#go').textContent='Next';}
+        else $('#fb').innerHTML='Not quite. Read each character again and try once more.';
+      }
+    };
+  }
+  show();
+}
+
+/* ---------- Build it: English + romaji → tap hiragana tiles ---------- */
+function buildIt(){
+  const qs=shuffle(pool()); let i=0, score=0;
+  function show(){
+    if(i===qs.length){stage.innerHTML=finish(score,qs.length);return}
+    const w=qs[i]; let placed=[], tries=0, solved=false;
+    const tiles=shuffle([...w.t.map((c,k)=>({c,id:'a'+k})),...w.x.map((c,k)=>({c,id:'x'+k}))]);
+    stage.innerHTML=`<div class="status"><span>Word <b>${i+1}</b>/${qs.length}</span><span>Right first time <b>${score}</b></span></div>
+      <div class="play"><span class="prompt">Build this word in hiragana. Two tiles are tricks!</span>
+      <div class="big"><span class="eng"><span class="em" aria-hidden="true">${w.em}</span><span class="rm">${w.r}</span><span class="t">${w.en}</span></span></div>
+      <div class="slot" id="slot"></div><div class="bank" id="bank"></div>
+      <div class="row"><button class="btn ghost" id="clr">Clear</button><button class="btn" id="chk">Check</button></div>
+      <div class="fb" id="fb"></div></div>`;
+    const slot=$('#slot'), bank=$('#bank');
+    const tileEl=(t,pre)=>{const b=document.createElement('button');b.className='chunk';b.id=pre+t.id;b.innerHTML=rb(t.c,TILE_RM[t.c]||'');return b};
+    function draw(){
+      slot.classList.remove('bad'); slot.innerHTML='';
+      if(!placed.length){slot.innerHTML='<span class="ph">Tap the hiragana below in order</span>';return}
+      placed.forEach((t,k)=>{const b=tileEl(t,'p-');b.onclick=()=>{if(solved)return;placed.splice(k,1);$('#c-'+t.id).classList.remove('used');draw()};slot.appendChild(b)});
+    }
+    tiles.forEach(t=>{const b=tileEl(t,'c-');b.onclick=()=>{if(solved||b.classList.contains('used'))return;b.classList.add('used');placed.push(t);draw()};bank.appendChild(b)});
+    draw();
+    $('#clr').onclick=()=>{if(solved)return;placed=[];bank.querySelectorAll('.chunk').forEach(c=>c.classList.remove('used'));draw();$('#fb').innerHTML=''};
+    $('#chk').onclick=()=>{
+      if(solved){i++;show();return}
+      if(placed.map(t=>t.c).join('')===w.h){
+        solved=true; if(!tries)score++; slot.classList.add('ok');
+        $('#fb').innerHTML=`<span class="jp">${rb('せいかい','seikai')}！</span> Correct!`;
+        $('#chk').textContent=i+1<qs.length?'Next word':'Finish'; $('#clr').hidden=true;
+      }else{
+        tries++; slot.classList.remove('bad'); void slot.offsetWidth; slot.classList.add('bad');
+        $('#fb').innerHTML=tries>=2?`Answer: <span class="jp always" style="font-size:24px">${rb(w.h,w.r)}</span>`:'Not quite. Watch out for the trick tiles.';
+      }
+    };
+  }
+  show();
+}
+
+/* ---------- Memory ---------- */
+function memory(){
+  const ps=shuffle(pool()).slice(0,6), en=$('#pairType').value==='en';
+  const cards=shuffle(ps.flatMap(w=>[{w,side:'a',html:`<span class="f-kana">${rb(w.h,w.r)}</span>`},
+    {w,side:'b',html:en?`<span class="f-en"><span class="em" aria-hidden="true">${w.em}</span><span class="t">${w.en}</span></span>`:`<span class="f-rm">${w.r}</span>`}]));
+  let open=[], lock=false, moves=0, found=0;
+  stage.innerHTML=`<div class="status"><span>Flip two cards. Find the pairs.</span><span>Moves <b id="mv">0</b> · Pairs <b id="pf">0</b>/${ps.length}</span></div><div class="mem" id="mem"></div><div id="end"></div>`;
+  cards.forEach((c,i)=>{
+    const b=document.createElement('button');b.className='mcard';b.id='m'+i;b.setAttribute('aria-label','Hidden card');
+    b.innerHTML=`<div class="in"><div class="face back">あ</div><div class="face front">${c.html}</div></div>`;
+    b.onclick=()=>{
+      if(lock||b.classList.contains('up')||b.classList.contains('done'))return;
+      b.classList.add('up');b.removeAttribute('aria-label');open.push([b,c]);
+      if(open.length<2)return;
+      moves++;$('#mv').textContent=moves;
+      const [[b1,c1],[b2,c2]]=open;open=[];
+      if(c1.w===c2.w&&c1.side!==c2.side){
+        b1.classList.add('done');b2.classList.add('done');found++;$('#pf').textContent=found;
+        if(found===ps.length)$('#end').innerHTML=winBox(`<span class="jp">${rb('よくできました','yoku dekimashita')}！</span>`,`All ${ps.length} pairs in ${moves} moves.`);
+      }else{
+        lock=true;b1.classList.add('wrong');b2.classList.add('wrong');
+        setTimeout(()=>{[b1,b2].forEach(x=>{x.classList.remove('up','wrong');x.setAttribute('aria-label','Hidden card')});lock=false},1000);
+      }
+    };
+    $('#mem').appendChild(b);
+  });
+}
+
+/* ---------- Word list ---------- */
+function list(){
+  const table=set=>`<div class="tbl"><table><thead><tr><th></th><th>Hiragana</th><th>Romaji</th><th>English</th></tr></thead><tbody>
+    ${W.filter(w=>w.set===set).map(w=>`<tr><td class="em" aria-hidden="true">${w.em}</td><td class="k always">${rb(w.h,w.r)}</td><td class="r">${w.r}</td><td>${w.en}</td></tr>`).join('')}
+  </tbody></table></div>`;
+  stage.innerHTML=`<h2>Set 1: people and questions</h2>${table('a')}<h2>Set 2: my family</h2>${table('b')}
+  <ul class="notes">
+    <li><b>Small ょ</b> joins the sound before it: <span class="jp always">${rb('きょ','kyo')}</span> in ${rb('きょうだい','kyoudai')}, <span class="jp always">${rb('りょ','ryo')}</span> in ${rb('りょうしん','ryoushin')}.</li>
+    <li><b>Two dots ( ゛)</b> change the sound: ${rb('ほ','ho')} → ${rb('ぼ','bo')}, ${rb('た','ta')} → ${rb('だ','da')}, ${rb('そ','so')} → ${rb('ぞ','zo')}.</li>
+    <li><b>Long sounds:</b> ${rb('おばあさん','obaasan')} (grandmother) is not ${rb('おばさん','obasan')} (aunt)!</li>
+  </ul>`;
+}
+
+const GAMES={read:readIt,type:typeIt,build:buildIt,memory,list};
+function render(){
+  $('#f-set').hidden=tab==='list';
+  $('#f-pair').hidden=tab!=='memory';
+  $('#newGame').hidden=tab==='list';
+  GAMES[tab]();
+}
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  tab=t.dataset.tab;
+  document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected',x===t));
+  render();
+});
+$('#wordSet').onchange=render;
+$('#pairType').onchange=render;
+$('#newGame').onclick=render;
+$('#romaji').onchange=e=>document.body.classList.toggle('no-romaji',!e.target.checked);
+render();
+</script>
+</body>
+</html>
